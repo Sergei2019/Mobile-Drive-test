@@ -1,1 +1,28 @@
 # Mobile-Drive-test
+
+
+## Table of contents
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Setup](#setup)
+
+## General info
+Mobile drive test is a simple programm to visualize the received signal (RSRP) of smartphones (User equipments) in the cell.
+
+UE sends the measurement's report messages during the period with main characteristics of the cell (CELL IDENTIFICATION, RSRP, RSRQ) and GPS coordinates.
+With a Nokia's Netact applications the radio engineer can trace the traffic in particular cell and then download in .xml or .csv.
+	
+## Technologies
+Project is created with:
+* Python >= 3.7
+* folium == 0.12.0
+* geopandas == 0.10.2
+* h3pandas == 0.2.3
+* tkinter(customtkinter)
+
+
+## Setup
+To run this project, install requirements.txt then compile it with auto-py-to-exe OR just run .exe file
+
+Note: .exe file must be in the same directory as traces (.csv files)
+
