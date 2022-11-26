@@ -5,6 +5,7 @@
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
+* [Example](#example)
 
 ## General info
 Mobile drive test is a simple program to visualize the received signal (RSRP) of smartphones (User equipments) in the cell.
@@ -26,3 +27,5 @@ To run this project, install requirements.txt then compile it with auto-py-to-ex
 
 Note: .exe file must be in the same directory as traces (.csv files)
 
+## Example
+![alt text](https://github.com/Sergei2019/Mobile-Drive-test/blob/main/Example.PNG?raw=true)
