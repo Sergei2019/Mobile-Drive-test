@@ -7,7 +7,7 @@
 * [Setup](#setup)
 
 ## General info
-Mobile drive test is a simple programm to visualize the received signal (RSRP) of smartphones (User equipments) in the cell.
+Mobile drive test is a simple program to visualize the received signal (RSRP) of smartphones (User equipments) in the cell.
 
 UE sends the measurement's report messages during the period with main characteristics of the cell (CELL IDENTIFICATION, RSRP, RSRQ) and GPS coordinates.
 With a Nokia's Netact applications the radio engineer can trace the traffic in particular cell and then download in .xml or .csv.
