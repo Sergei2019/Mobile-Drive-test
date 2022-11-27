@@ -4,4 +4,8 @@ folium
 branca
 geojson
 pandas
+<<<<<<< HEAD
 customtkinter
+=======
+customtkinter
+>>>>>>> f805cdca783e6df3e919ad650a8949444f605f5b

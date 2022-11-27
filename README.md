@@ -23,7 +23,7 @@ Project is created with:
 
 
 ## Setup
-To run this project, install requirements.txt then compile it with auto-py-to-exe OR just run .exe file
+To run this project, install requirements.txt and run main.py OR compile it with auto-py-to-exe
 
 Note: .exe file must be in the same directory as traces (.csv files)
 
