@@ -19,7 +19,7 @@ Project is created with:
 * folium == 0.12.0
 * geopandas == 0.10.2
 * h3pandas == 0.2.3
-* tkinter(customtkinter)
+* Tkinter (Customtkinter)
 
 
 ## Setup
