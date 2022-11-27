@@ -44,10 +44,10 @@ resolutions = [
     	     ("13", 13),
              ("14", 14),]
 
-customtkinter.CTkLabel(root, 
-         text="""Выберите разрешение:""",
-         justify = tk.LEFT,
-         padx = 20).pack()
+customtkinter.CTkLabel(root,
+                       text="""Выберите разрешение:""",
+                       justify=tk.LEFT,
+                       padx=20).pack()
 
 
 def status_bar(all_progress):
@@ -72,7 +72,7 @@ def dataframeCreator(dir_val, f):
     file.close()
     file = open(path.join(dir_val, f), 'r',encoding="utf8")
     enbid, cellid, band = mdt.get_enb_cid(file)
-    df = df.loc[(df['enb_id'] == enbid)&(df['cell_id']==cellid)]
+    df = df.loc[(df['enb_id'] == enbid)&(df['cell_id'] == cellid)]
     return df, enbid, cellid, band
 
 
@@ -201,7 +201,7 @@ def bandcallback(res):
         df_1800 = df_1800.drop(columns=['lng', 'lat','enb_id','cell_id', 'RSRQ']).groupby(res_dict[res]).mean()
         df_2600 = df_2600.h3.geo_to_h3(res)
         df_2600 = df_2600.drop(columns=['lng', 'lat','enb_id','cell_id', 'RSRQ']).groupby(res_dict[res]).mean()
-        gdf_dict = {'800':df_800, '1800':df_1800, '2600':df_2600}
+        gdf_dict = {'800': df_800, '1800': df_1800, '2600': df_2600}
         for k, v in gdf_dict.items():
             gdf = v.h3.h3_to_geo_boundary()
             m = Map(location = [df1['lat'].head(1), df1['lng'].head(1)], zoom_start=17)

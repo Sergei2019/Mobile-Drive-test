@@ -1,13 +1,13 @@
-import re
 import json
+import re
+
 from const.const import RSRP, RSRQ
 
 
 class MdtParser:
-    
+
     def band_finder(self, letter):
-        band = '2600' if letter == 'N' else '1800' if letter == 'K' else '800'
-        return band
+        return '2600' if letter == 'N' else '1800' if letter == 'K' else '800'
 
     def get_enb_cid(self, file):
         lines = file.readlines()
@@ -27,7 +27,7 @@ class MdtParser:
                 except IndexError:
                     pass
                 return enb_id, cid, band
-    
+
     def bin_to_dec(self, num):
         dec_int = int(num, 2)
         enb_id = dec_int//256
@@ -38,11 +38,11 @@ class MdtParser:
         bin_val_str = str(bin_val)
         lat = bin_val_str[2:25]
         lon = bin_val_str[26:50]
-        latitude = (int(lat,2)*90)/(2**23)
-        longitude = (int(lon,2)*360)/(2**25)
+        latitude = (int(lat, 2)*90)/(2**23)
+        longitude = (int(lon, 2)*360)/(2**25)
         return latitude, longitude
 
-    def get_el_kpi(self, el, kpi):    
+    def get_el_kpi(self, el, kpi):
         for kpi_pos in kpi:
             if kpi_pos.range_min <= el < kpi_pos.range_max:
                 return kpi_pos.color
@@ -57,12 +57,12 @@ class MdtParser:
         result_locat = ()
         result_locat_final = ()
         for j in range(len(result)):
-            if '<locationInfo-r10>'in result[j]:
+            if '<locationInfo-r10>' in result[j]:
                 result_locat = result_locat + (result[j],)
         for el in result_locat:
             lst = el.split('<locationInfo-r10>')
             for e in lst:
-                if '<ellipsoidPointWith' in  e and (len(e.split('<cellIdentity>'))==2) or ('<locationInfo' in e and 'c_rnti' in e):
+                if '<ellipsoidPointWith' in e and (len(e.split('<cellIdentity>')) == 2) or ('<locationInfo' in e and 'c_rnti' in e):
                     result_locat_final = result_locat_final + (e,)
         for j in range(len(result_locat_final)):
             lines = result_locat_final[j].splitlines()
@@ -71,22 +71,28 @@ class MdtParser:
                     crnti_lst = lines[i].split(' ')
                     crntilst = crnti_lst[11].split('=')
                     crnti_val = crntilst[1]
-                    c_rnti = c_rnti + (crnti_val,)  
+                    c_rnti = c_rnti + (crnti_val,)
                 if '<ellipsoidPointWith' in lines[i]:
-                    l = int("".join(lines[i+1].split()), base=16)
-                    bin_value = bin(l)
+                    gps = int("".join(lines[i+1].split()), base=16)
+                    bin_value = bin(gps)
                     lat = lat + (self.coords_converter(bin_value)[0],)
                     lon = lon + (self.coords_converter(bin_value)[1],)
                 if '<cellIdentity>' in lines[i]:
                     enb_id = enb_id + (self.bin_to_dec(lines[i+1])[0],)
                     cell_id = cell_id + (self.bin_to_dec(lines[i+1])[1],)
                 if '<rsrpResult-r10>' in lines[i]:
-                    l = re.split(r'\W+', lines[i])
-                    rsrp = rsrp + (RSRP.get(int(l[3])),)
+                    rsrp_value = re.split(r'\W+', lines[i])
+                    rsrp = rsrp + (RSRP.get(int(rsrp_value[3])),)
                 if '<rsrqResult-r10>' in lines[i]:
-                    l = re.split(r'\W+', lines[i])
-                    rsrq = rsrq + (RSRQ.get(int(l[3])),)
-        len_check = [list(enb_id), list(cell_id), list(c_rnti), list(lat), list(lon), list(rsrp), list(rsrq)]
+                    rsrq_value = re.split(r'\W+', lines[i])
+                    rsrq = rsrq + (RSRQ.get(int(rsrq_value[3])),)
+        len_check = [list(enb_id),
+                     list(cell_id),
+                     list(c_rnti),
+                     list(lat),
+                     list(lon),
+                     list(rsrp),
+                     list(rsrq)]
         check = []
         for element in len_check:
             check.append(len(element))
@@ -95,18 +101,17 @@ class MdtParser:
             if len(element) < max_val:
                 for i in range(0, max_val-len(element)):
                     element.append(0)
-        radio_meas = {'enb_id':len_check[0],
-               'cell_id':len_check[1],
-               'c_rnti':len_check[2],
-               'lat':len_check[3],
-               'lng':len_check[4],
-               'RSRP':len_check[5],
-               'RSRQ':len_check[6]}
-        return radio_meas
+        return {'enb_id': len_check[0],
+                'cell_id': len_check[1],
+                'c_rnti': len_check[2],
+                'lat': len_check[3],
+                'lng': len_check[4],
+                'RSRP': len_check[5],
+                'RSRQ': len_check[6]}
 
-    def geojson_creator(self, df, cols, lon = 'lng', lat = 'lat'):
-        geojson = {'type':'FeatureCollection', 'features':[]}
-        for i,rows in df.iterrows():
+    def geojson_creator(self, df, cols, lon='lng', lat='lat'):
+        geojson = {'type': 'FeatureCollection', 'features': []}
+        for i, rows in df.iterrows():
             feature = {
                     "type": "Feature",
                     "geometry": {
@@ -120,6 +125,4 @@ class MdtParser:
             feature['geometry']['coordinates'] = [rows["lng"], rows["lat"]]
             feature['properties'][cols] = [rows[cols]]
             geojson['features'].append(feature)
-        str_dict = json.dumps(geojson)
-        return str_dict
-
+        return json.dumps(geojson)
